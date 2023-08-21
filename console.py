@@ -147,6 +147,7 @@ class HBNBCommand(cmd.Cmd):
                         pass
                     if hasattr(new_instance, atr):
                         setattr(new_instance, atr, value)
+                storage.new(new_instance)
                 storage.save()
                 print(new_instance.id)
 
@@ -236,8 +237,8 @@ class HBNBCommand(cmd.Cmd):
         else:
             for k, v in storage._FileStorage__objects.items():
                 print_list.append(str(v))
-
-        print(print_list)
+        for item in print_list:
+            print(item.replace('"', ''))
 
     def help_all(self):
         """ Help information for the all command """
