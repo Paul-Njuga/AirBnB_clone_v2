@@ -31,6 +31,7 @@ class FileStorage:
             for key, val in temp.items():
                 temp[key] = val.to_dict()
             json.dump(temp, f)
+
     def delete(self, obj=None):
         """delete objects"""
         if obj is None:
@@ -39,7 +40,7 @@ class FileStorage:
             key = "{}.{}".format(type(obj).__name__, obj.id)
             if key in self.__objects:
                 del self.__objects[key]
-                self.save()
+            self.save()
 
     def reload(self):
         """Loads storage dictionary from file"""
