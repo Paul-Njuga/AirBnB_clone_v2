@@ -114,17 +114,40 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, args):
-        """ Create an object of any class"""
+        """Create an object of any class"""
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
-            print("** class doesn't exist **")
-            return
-        new_instance = HBNBCommand.classes[args]()
-        storage.save()
-        print(new_instance.id)
-        storage.save()
+        if args:
+            prt_args = args.partition(" ")
+            cls_nm = prt_args[0]  # Class name
+            objs = prt_args[2].split()  # Parameters
+            if cls_nm not in HBNBCommand.classes:
+                print("** class doesn't exist **")
+                return
+            else:
+                new_instance = HBNBCommand.classes[cls_nm]()
+                for obj in objs:
+                    nm_vl = obj.split("=")
+                    atr = nm_vl[0]
+                    value = nm_vl[1]
+                    is_string = HBNBCommand._stringChecker(value)
+                    is_float = HBNBCommand._floatChecker(value)
+                    is_num = HBNBCommand._numChecker(value)
+                    if is_string:
+                        value = value[1:-1]  # Rmv start & end double quotes
+                        value = value.replace('\\"', '"')  # Handle backslash
+                        value = value.replace("_", " ")  # Insert spaces
+                    elif is_num:
+                        value = int(value)
+                    elif is_float:
+                        value = float(value)
+                    else:
+                        pass
+                    if hasattr(new_instance, atr):
+                        setattr(new_instance, atr, value)
+                storage.save()
+                print(new_instance.id)
 
     def help_create(self):
         """ Help information for the create method """
@@ -319,6 +342,32 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
+    def _stringChecker(string):
+        """Create helper func to match non-empty string with double quotes"""
+        pattern = r"^\".+\"$"
+        match = re.match(pattern, string)
+        return bool(match)
+
+    def _floatChecker(string):
+        """Create helper func to check if string is a valid float"""
+        if not (string.startswith('"') and not string.endswith('"')):
+            if "." in string:
+                try:
+                    float(string)
+                except ValueError:
+                    return False
+                return True
+
+    def _numChecker(string):
+        """Create helper function to check if string is a valid integer"""
+        if not (string.startswith('"') and not string.endswith('"')):
+            if "." not in string:
+                try:
+                    int(string)
+                except ValueError:
+                    return False
+                return True
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
