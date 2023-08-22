@@ -1,12 +1,17 @@
 #!/usr/bin/python3
 """This module defines a base class for all models in our hbnb clone"""
 import uuid
+from os import getenv
 import sqlalchemy
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import DateTime, Column, String
 
-Base = declarative_base()
+if getenv("HBNB_TYPE_STORAGE") == "db":
+    Base = declarative_base()
+else:
+    Base = object
+
 
 class BaseModel:
     """A base class for all hbnb models"""
@@ -63,9 +68,9 @@ class BaseModel:
         """Convert instance into dict format"""
         dictionary = {}
         dictionary.update(self.__dict__)
-        """_sa_instance is an irrelevant internal alchemy which is not relevant to
-        json format"""
-        dictionary.pop("_sa_instance_state", None)
+        key = "_sa_instance_state"
+        if key in dictionary.keys():
+            dictionary.pop(key, None)
         dictionary.update({'__class__':
                           (str(type(self)).split('.')[-1]).split('\'')[0]})
         dictionary['created_at'] = self.created_at.isoformat()
