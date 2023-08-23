@@ -15,12 +15,17 @@ else:
 
 class BaseModel:
     """A base class for all hbnb models"""
-    id = Column(String(60), nullable=False, primary_key=True)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
-    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    if getenv("HBNB_TYPE_STORAGE") == "db":
+        id = Column(String(60), nullable=False, primary_key=True)
+        created_at = Column(DateTime,
+                            nullable=False,
+                            default=datetime.utcnow())
+        updated_at = Column(DateTime,
+                            nullable=False,
+                            default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
-        """Instatntiates a new model"""
+        """Instatiates a new model"""
         if not kwargs:
             from models import storage
             self.id = str(uuid.uuid4())
@@ -30,13 +35,15 @@ class BaseModel:
             for key, val in kwargs.items():
                 if key != '__class__':
                     setattr(self, key, val)
-            if (kwargs.get('created_at') and type(kwargs.get('created_at') is str)):
+            if (kwargs.get('created_at') and
+                    type(self.created_at) is str):
                 kwargs['created_at'] = datetime.strptime(
                     kwargs['created_at'],
                     '%Y-%m-%dT%H:%M:%S.%f')
             else:
                 self.created_at = datetime.now()
-            if (kwargs.get('updated_at') and type(kwargs.get('updated_at') is str)):
+            if (kwargs.get('updated_at') and
+                    type(self.updated_at) is str):
                 kwargs['updated_at'] = datetime.strptime(
                     kwargs['updated_at'],
                     '%Y-%m-%dT%H:%M:%S.%f')
@@ -49,8 +56,12 @@ class BaseModel:
 
     def __str__(self):
         """Returns a string representation of the instance"""
-        cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
+        pr_dct = self.__dict__
+        pr_dct.pop("_sa_instance_state", None)
+        return '[{}] ({}) {}'.format(
+            self.__class__.__name__,
+            self.id,
+            pr_dct)
 
     def delete(self):
         """delete current instance"""
@@ -66,16 +77,12 @@ class BaseModel:
 
     def to_dict(self):
         """Convert instance into dict format"""
-        dictionary = {}
-        dictionary.update(self.__dict__)
-        key = "_sa_instance_state"
-        if key in dictionary.keys():
-            dictionary.pop(key, None)
-        dictionary.update({'__class__':
-                          (str(type(self)).split('.')[-1]).split('\'')[0]})
+        dictionary = self.__dict__.copy()
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
         """below line adds the class name of the instance dictionary"""
-        """important for desrialization"""
+        """important for deserialization"""
         dictionary['__class__'] = type(self).__name__
+        if "_sa_instance_state" in dictionary.keys():
+            dictionary.pop('_sa_instance_state', None)
         return dictionary

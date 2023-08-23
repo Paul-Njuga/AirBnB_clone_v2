@@ -212,7 +212,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del(storage.all()[key])
+            del (storage.all()[key])
             storage.save()
         except KeyError:
             print("** no instance found **")
@@ -238,7 +238,7 @@ class HBNBCommand(cmd.Cmd):
             for k, v in storage.all().items():
                 obj_list.append(str(v))
         print('[', end='')
-        print(','.join(obj_list), end='')
+        print(', '.join(obj_list), end='')
         print(']')
 
     def help_all(self):
@@ -371,6 +371,7 @@ class HBNBCommand(cmd.Cmd):
                 except ValueError:
                     return False
                 return True
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
