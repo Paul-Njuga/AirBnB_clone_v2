@@ -2,7 +2,6 @@
 """This module defines a base class for all models in our hbnb clone"""
 import uuid
 from os import getenv
-import sqlalchemy
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import DateTime, Column, String
