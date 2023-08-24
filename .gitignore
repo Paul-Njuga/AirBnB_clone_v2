@@ -1,4 +1,5 @@
 *__pycache__/
 file.json
-*.swp
-*.swo
+test_params_create
+main_delete.py
+main_place_amenities.py
