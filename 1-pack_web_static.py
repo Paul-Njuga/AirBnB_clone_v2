@@ -11,9 +11,9 @@ def do_pack():
     fmt = datetime.now().strftime("%Y%m%d%H%M%S")
 
     local("mkdir -p versions")
-    local(f"tar -cvzf versions/web_static_{fmt}.tgz web_static")
+    local("tar -cvzf versions/web_static_{}.tgz web_static".format(fmt))
 
     try:
-        return (f"versions/web_static_{fmt}.tgz")
+        return ("versions/web_static_{}.tgz".format(fmt))
     except Exception as e:
         return None
