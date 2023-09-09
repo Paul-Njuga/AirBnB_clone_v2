@@ -3,7 +3,6 @@
 from os.path import isfile
 from fabric.api import *
 
-env.user = ['ubuntu']
 env.hosts = ["18.204.16.34", "100.26.246.77"]
 
 
