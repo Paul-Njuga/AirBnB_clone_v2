@@ -3,8 +3,10 @@
 from os.path import isfile
 from fabric.api import *
 
+prv_ky_pth = "~/.ssh/school"
 env.user = ['ubuntu']
-env.hosts = ["18.204.16.34", "100.26.246.77"]
+env.hosts = ["ubuntu@18.204.16.34", "ubuntu@100.26.246.77"]
+env.key_filename = prv_ky_pth
 
 
 def do_deploy(archive_path):
@@ -25,9 +27,14 @@ def do_deploy(archive_path):
         run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/".
             format(achv_tgz, achv))
         run("rm /tmp/{}".format(achv_tgz))
+        run("mv /data/web_static/releases/{}/web_static/* \
+            /data/web_static/releases/{}/".format(achv, achv))
+        run("rm -rf /data/web_static/releases/{}/web_static".
+            format(achv))
+        run("rm -rf /data/web_static/current")
         run("ln -sf /data/web_static/releases/{}/ \
             /data/web_static/current".format(achv))
         print("New version deployed!")
         return True
-    except Exception as e:
+    except Exception:
         return False
