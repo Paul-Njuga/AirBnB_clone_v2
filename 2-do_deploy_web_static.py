@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """2-do_deploy_web_static.py module"""
-from os.path import isfile
 from fabric.api import *
+from os.path import isfile
 
 prv_ky_pth = "~/.ssh/school"
 env.user = ['ubuntu']
