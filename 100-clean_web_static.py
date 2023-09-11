@@ -81,5 +81,5 @@ def do_clean(number=0):
     dir_wbsvr_nms = dir_wbsvr.split("\n")
     for i in dir_wbsvr_nms[n:]:
         if i is 'test':
-            pass
+            continue
         run("rm -rf /data/web_static/releases/{}".format(i))
