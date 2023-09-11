@@ -55,6 +55,7 @@ def do_deploy(archive_path):
     except Exception:
         return False
 
+
 def deploy():
     """Creates & distributes an archive to your web servers
     Returns: Value of do_deploy, False if no archive created
