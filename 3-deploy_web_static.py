@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""2-do_deploy_web_static.py module"""
+"""3-deploy_web_static module"""
 from datetime import datetime
 from fabric.api import *
 from os.path import isfile
