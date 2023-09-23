@@ -30,5 +30,5 @@ class State(BaseModel, Base):
         def cities(self):
             """Cities getter attribute for file storage"""
             return [city for city
-                    in models.storage.all(City)
+                    in models.storage.all(City).values
                     if city.state_id == self.id]
